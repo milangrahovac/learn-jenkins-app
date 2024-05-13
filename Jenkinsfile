@@ -3,7 +3,7 @@ pipeline {
 
     stages {
         stage('build') {
-            agent{
+            agent {
                 image 'node:18-alpine'
                 reuseNODE true
             }
