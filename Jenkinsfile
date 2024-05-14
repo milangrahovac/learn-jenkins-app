@@ -5,6 +5,7 @@ pipeline {
 
         stage('Test') {
             parallel {
+                
                 stage('Unit test') {
                     agent {
                         docker {
@@ -18,6 +19,13 @@ pipeline {
                             #test -f build/index.html
                             npm test
                         '''
+                    }
+
+                    post {
+                        always {
+                            junit 'jenkins-results/junit.xml'
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                        }
                     }
                 }
 
@@ -43,10 +51,4 @@ pipeline {
 
     }
 
-    post {
-        always {
-            junit 'jenkins-results/junit.xml'
-            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
-        }
-    }
 }
