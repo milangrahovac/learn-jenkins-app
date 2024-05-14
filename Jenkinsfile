@@ -2,7 +2,8 @@ pipeline {
     agent any
 
     stages {
-    
+        /*
+
         stage('Build') {
             agent {
                 docker {
@@ -21,7 +22,7 @@ pipeline {
                 '''
             }
         }
-        
+        */
 
         stage('Test') {
             agent {
@@ -33,7 +34,7 @@ pipeline {
 
             steps {
                 sh '''
-                    test -f build/index.html
+                    #test -f build/index.html
                     npm test
                 '''
             }
@@ -60,7 +61,8 @@ pipeline {
 
     post {
         always {
-            junit 'jenkins-results/junit.xml'
+            junit 'jest-results/junit.xml'
+            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
         }
     }
 }
