@@ -3,6 +3,9 @@ pipeline {
 
     stages {
 
+        NETLifY_SITE_ID = '3b6f48dd-85a5-4c71-b3c2-3cedb6a13d5c'
+
+
         stage('Build') {
             agent {
                 docker {
@@ -40,7 +43,7 @@ pipeline {
                     }
                     post {
                         always {
-                            junit 'jest-results/junit.xml'
+                            junit 'jenkins-results/junit.xml'
                         }
                     }
                 }
