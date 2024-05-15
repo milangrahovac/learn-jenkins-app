@@ -4,8 +4,7 @@ pipeline {
     environment {
         NETLIFY_SITE_ID = '3b6f48dd-85a5-4c71-b3c2-3cedb6a13d5c'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
-        REACT_APP_VERSION = "1.0.2"
-
+        REACT_APP_VERSION = "1.0.$BUILD_ID"
     }
 
     stages {
@@ -98,7 +97,7 @@ pipeline {
                     node_modules/.bin/netlify status
                     node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json
                     CI_ENVIRONMENT_URL=$(node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json)
-                    npx playwright test  --reporter=html
+                    npx playwright test --reporter=html
                 '''
             }
 
@@ -129,6 +128,7 @@ pipeline {
                     echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
                     node_modules/.bin/netlify deploy --dir=build --prod
+                    sleep(10)
                     npx playwright test  --reporter=html
                 '''
             }
