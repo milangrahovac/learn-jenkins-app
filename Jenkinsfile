@@ -1,12 +1,13 @@
 pipeline {
     agent any
 
-    environment {
-        NETLIFY_SITE_ID = '3b6f48dd-85a5-4c71-b3c2-3cedb6a13d5c'
-        NETLIFY_AUTH_TOKEN = credentials('netlify-token')
-    }
-
     stages {
+
+
+        environment {
+            NETLIFY_SITE_ID = '3b6f48dd-85a5-4c71-b3c2-3cedb6a13d5c'
+            NETLIFY_AUTH_TOKEN = credentials('netlify-token')
+        }
 
         stage('Build') {
             agent {
@@ -69,7 +70,7 @@ pipeline {
 
                     post {
                         always {
-                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright Local Report', reportTitles: '', useWrapperFileDirectly: true])
                         }
                     }
                 }
@@ -93,5 +94,31 @@ pipeline {
                 '''
             }
         }
+
+        stage('Prod E2E') {
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    reuseNode true
+                }
+            }
+
+            environment {
+                CI_ENVIRONMENT_URL = 'https://elaborate-licorice-2839e2.netlify.app'
+            }
+
+            steps {
+                sh '''
+                    npx playwright test  --reporter=html
+                '''
+            }
+
+            post {
+                always {
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright E2E Report', reportTitles: '', useWrapperFileDirectly: true])
+                }
+            }
+        }
+
     }
 }
