@@ -95,7 +95,7 @@ pipeline {
                     node_modules/.bin/netlify --version
                     echo "Deploying to staging. Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json
+                    node_modules/.bin/netlify deploy --dir=build --json > dev-deploy-output.json
                     CI_ENVIRONMENT_URL=$(node_modules/.bin/node-jq -r '.deploy_url' dev-deploy-output.json)
                     echo "Deployment URL: $CI_ENVIRONMENT_URL"
                     sleep 10
@@ -129,10 +129,10 @@ pipeline {
                     node_modules/.bin/netlify --version
                     echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json
+                    node_modules/.bin/netlify deploy --dir=build --json > prod-deploy-output.json
                     CI_ENVIRONMENT_URL=$(node_modules/.bin/node-jq -r '.deploy_url' prod-deploy-output.json)
                     echo "Production URL: $CI_ENVIRONMENT_URL"
-                    sleep 20
+                    sleep 10
                     npx playwright test --reporter=html
                 '''
             }
