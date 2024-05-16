@@ -9,12 +9,6 @@ pipeline {
 
     stages {
 
-        stage('Docker') {
-            steps {
-                sh 'docker build -t my-playwright .'
-            }
-        }
-
          stage('Build') {
             agent {
                 docker {
@@ -135,7 +129,7 @@ pipeline {
                     node_modules/.bin/netlify --version
                     echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --json > prod-deploy-output.json
+                    node_modules/.bin/netlify deploy --dir=build --prod --json > prod-deploy-output.json
                     CI_ENVIRONMENT_URL=$(node_modules/.bin/node-jq -r '.deploy_url' prod-deploy-output.json)
                     echo "Production URL: $CI_ENVIRONMENT_URL"
                     sleep 10
