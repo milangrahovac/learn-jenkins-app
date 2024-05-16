@@ -1,0 +1,20 @@
+pipeline {
+    agent any
+
+    stages {
+ 
+        stage('Build') {
+            agent{
+                docker {
+                    image 'ubuntu:noble'
+                    args '-u root'
+                }
+            }
+            steps {
+                echo 'Deploying ...'
+                sh 'apt update'
+                sh 'apt install jq -y'
+            }
+        }
+    }
+}

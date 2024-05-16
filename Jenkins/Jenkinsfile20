@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building ...'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying ...'
+                script {
+                    env.MY_VAR = 'This is set in deploy.'
+                    env.DATE = sh(script: 'date', returnStdout:true)
+                }
+            }
+        }
+        stage('E2E') {
+            steps {
+                echo 'E2E ...'
+                echo "MY_VAR is: ${env.MY_VAR}"
+                echo "Date: ${env.DATE}"
+            }
+        }
+    }
+}

@@ -1,0 +1,19 @@
+pipeline {
+    agent any
+
+    stages {
+ 
+        stage('Build') {
+            agent{
+                docker {
+                    image 'python:3-alpine'
+                    args '-u root'
+                }
+            }
+            steps {
+                echo 'Deploying ...'
+                sh 'apk  add jq'
+            }
+        }
+    }
+}
