@@ -124,7 +124,7 @@ pipeline {
             }
 
             environment {
-                CI_ENVIRONMENT_URL = 'https://elaborate-licorice-2839e2.netlify.app/'
+                CI_ENVIRONMENT_URL = 'https://elaborate-licorice-2839e2.netlify.app'
             }
 
             steps {
@@ -133,7 +133,7 @@ pipeline {
                     netlify --version
                     echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
                     netlify status
-                    node_modules/.bin/netlify deploy --dir=build --prod
+                    netlify deploy --dir=build --prod
                     sleep 10
                     npx playwright test --reporter=html
                 '''
